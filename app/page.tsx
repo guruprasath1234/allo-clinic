@@ -7,6 +7,14 @@ import { Badge } from '@/components/ui/badge';
 import { Calendar, Users, UserCog, Activity, Clock, TrendingUp, Plus } from 'lucide-react';
 import Link from 'next/link';
 
+interface Appointment {
+  id: number;
+  patient: string;
+  doctor: string;
+  time: string;
+  status: string;
+}
+
 interface DashboardStats {
   todayAppointments: number;
   totalPatients: number;
@@ -22,7 +30,7 @@ export default function Dashboard() {
     pendingAppointments: 0
   });
 
-  const [recentAppointments, setRecentAppointments] = useState([]);
+  const [recentAppointments, setRecentAppointments] = useState<Appointment[]>([]);
 
   useEffect(() => {
     // Simulate API calls
