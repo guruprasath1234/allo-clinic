@@ -47,9 +47,9 @@ export default function PatientsPage() {
     setPatients([
       {
         id: 1,
-        name: 'John Smith',
-        email: 'john.smith@email.com',
-        phone: '+1-555-0123',
+        name: 'Ramesh',
+        email: 'Ramesh@email.com',
+        phone: '+91 84593 01246',
         address: '123 Main St, City, State 12345',
         dateOfBirth: '1985-03-15',
         gender: 'Male',
@@ -60,9 +60,9 @@ export default function PatientsPage() {
       },
       {
         id: 2,
-        name: 'Emily Johnson',
-        email: 'emily.johnson@email.com',
-        phone: '+1-555-0125',
+        name: 'Johnson',
+        email: 'johnson@email.com',
+        phone: '+91 98545 13255',
         address: '456 Oak Ave, City, State 12345',
         dateOfBirth: '1992-07-22',
         gender: 'Female',
@@ -73,9 +73,9 @@ export default function PatientsPage() {
       },
       {
         id: 3,
-        name: 'Robert Davis',
+        name: 'Robert',
         email: 'robert.davis@email.com',
-        phone: '+1-555-0127',
+        phone: '+91 7845261325',
         address: '789 Pine St, City, State 12345',
         dateOfBirth: '1978-11-08',
         gender: 'Male',

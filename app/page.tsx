@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Users, UserCog, Activity, Clock, TrendingUp, Plus } from 'lucide-react';
+import { Calendar, Users, UserCog, Activity, Clock, TrendingUp, Plus, LogOut } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface Appointment {
   id: number;
@@ -23,6 +24,7 @@ interface DashboardStats {
 }
 
 export default function Dashboard() {
+  const router = useRouter();
   const [stats, setStats] = useState<DashboardStats>({
     todayAppointments: 0,
     totalPatients: 0,
@@ -31,23 +33,40 @@ export default function Dashboard() {
   });
 
   const [recentAppointments, setRecentAppointments] = useState<Appointment[]>([]);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
+    // Fetch current logged-in user
+    fetch('/api/auth/me')
+      .then(res => res.json())
+      .then(data => {
+        if (!data?.email) {
+          router.push('/auth/signin');
+        } else {
+          setUser(data);
+        }
+      });
+
     // Simulate API calls
     setStats({
-      todayAppointments: 12,
-      totalPatients: 248,
+      todayAppointments: 10,
+      totalPatients: 20,
       activeDoctors: 8,
-      pendingAppointments: 5
+      pendingAppointments: 2
     });
 
     setRecentAppointments([
-      { id: 1, patient: 'John Smith', doctor: 'Dr. Sarah Wilson', time: '09:00 AM', status: 'confirmed' },
-      { id: 2, patient: 'Emily Johnson', doctor: 'Dr. Michael Chen', time: '10:30 AM', status: 'pending' },
-      { id: 3, patient: 'Robert Davis', doctor: 'Dr. Sarah Wilson', time: '11:15 AM', status: 'confirmed' },
-      { id: 4, patient: 'Lisa Martinez', doctor: 'Dr. James Brown', time: '02:00 PM', status: 'confirmed' },
+      { id: 1, patient: 'Suresh', doctor: 'Dr.Wilson', time: '09:00 AM', status: 'confirmed' },
+      { id: 2, patient: 'Nickel', doctor: 'Dr. Michael', time: '10:30 AM', status: 'pending' },
+      { id: 3, patient: 'Varun', doctor: 'Dr. Wilson', time: '11:15 AM', status: 'confirmed' },
+      { id: 4, patient: 'Mahesh', doctor: 'Dr. James', time: '02:00 PM', status: 'confirmed' },
     ]);
-  }, []);
+  }, [router]);
+
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    router.push('/auth/signin');
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -72,13 +91,18 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              {user && <span className="text-sm text-gray-700">Hi, {user.name}</span>}
               <Button variant="outline" size="sm">
                 <Clock className="h-4 w-4 mr-2" />
-                {new Date().toLocaleDateString()}
+                {new Date().toLocaleDateString('en-GB')}
               </Button>
               <Button>
                 <Plus className="h-4 w-4 mr-2" />
                 Quick Actions
+              </Button>
+              <Button variant="destructive" onClick={handleLogout}>
+                <LogOut className="h-4 w-4 mr-2" />
+                Sign Out
               </Button>
             </div>
           </div>
