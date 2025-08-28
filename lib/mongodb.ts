@@ -1,32 +1,25 @@
-// lib/mongodb.ts
-import mongoose from 'mongoose';
+import { MongoClient } from "mongodb";
 
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  var mongooseCache: { conn: typeof mongoose | null; promise: Promise<typeof mongoose> | null } | undefined;
+const Uri = process.env.NEXT_PUBLIC_DATABASE_URL;
+if (!Uri) {
+  throw new Error("DATABASE_URL is not set in environment variables");
 }
 
-const MONGODB_URI = process.env.MONGODB_URI;
+const Client = new MongoClient(Uri);
+let isConnected = false;
 
-if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable in .env.local');
+export default async function ConnectDb() {
+  try {
+    if (!isConnected) {
+      await Client.connect();
+      isConnected = true;
+      console.log("Connected to MongoDB");
+    }
+    const db = Client.db("reception");
+    const UserSchema = db.collection("User");
+    return { UserSchema };
+  } catch (err) {
+    console.error("Database connection failed:", err);
+    throw new Error("invalid url provided");
+  }
 }
-
-async function dbConnect() {
-  if (global.mongooseCache?.conn) {
-    return global.mongooseCache.conn;
-  }
-
-  if (!global.mongooseCache) {
-    global.mongooseCache = { conn: null, promise: null };
-  }
-
-  if (!global.mongooseCache.promise) {
-    global.mongooseCache.promise = mongoose.connect(MONGODB_URI as string).then((m) => m);
-  }
-
-  global.mongooseCache.conn = await global.mongooseCache.promise;
-  return global.mongooseCache.conn;
-}
-
-export default dbConnect;

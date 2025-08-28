@@ -73,7 +73,7 @@ export default function DoctorsPage() {
         name: 'Dr. James Brown',
         email: 'james.brown@clinic.com',
         phone: '+1-555-0203',
-        specialization: 'Orthopedics',
+        specialization: 'Orthopedics', 
         experience: 15,
         qualifications: 'MD, FAAOS',
         workingHours: '10:00 AM - 6:00 PM',
